@@ -339,6 +339,8 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
   close(): void {
     this.isOpened = false;
     this.openChanged.emit(this.isOpened);
+    this.view = 'days'; // Always default to day view
+    this.setBarTitle();
     // If selectedDate is not updated set back to innerValue to cancel selection
     if (!this.isUpdateOnClick &&
       !(isSameDay(this.selectedDate , this.innerValue) &&
