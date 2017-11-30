@@ -90,7 +90,6 @@
     "zone.js": "^0.8.17"
   },
   "dependencies": {
-    "date-fns": "^1.28.5",
-    "ngx-slimscroll": "^3.3.3"
+    "date-fns": "^1.28.5"
   }
 }

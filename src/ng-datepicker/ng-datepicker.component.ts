@@ -24,7 +24,6 @@ import {
   subYears,
   setDay
 } from 'date-fns';
-import { ISlimScrollOptions } from 'ngx-slimscroll';
 
 export interface DatepickerOptions {
   barTitleFormat?: string; // default: 'MMMM YYYY'
@@ -80,7 +79,6 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
     isValid: boolean;
   }[];
   dayNames: string[];
-  scrollOptions: ISlimScrollOptions;
   days: {
     date: Date;
     day: number;
@@ -109,18 +107,7 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
     this.onChangeCallback(this.innerValue);
   }
 
-  constructor(private elementRef: ElementRef) {
-    this.scrollOptions = {
-      barBackground: '#DFE3E9',
-      gridBackground: '#FFFFFF',
-      barBorderRadius: '3',
-      gridBorderRadius: '3',
-      barWidth: '6',
-      gridWidth: '6',
-      barMargin: '0',
-      gridMargin: '0'
-    };
-  }
+  constructor(private elementRef: ElementRef) { }
 
   ngOnInit() {
     this.view = 'days';
