@@ -1,13 +1,29 @@
 <div class="container">
   <div class="columns is-multiline">
     <div class="column is-6 is-offset-3">
-      <div class="datepicker-container">
+      <div class="datevalue-container">
         model value: {{ date }}
+      </div>
+      <div class="button-container">
+        <button class="toggle" #toggleButton (click)="toggle()">Toggle</button>
+        <button class="toggle" (click)="datePicker.update()">Update</button>
       </div>
     </div>
     <div class="column is-6 is-offset-3">
       <div class="datepicker-container">
-        <ng-datepicker [(ngModel)]="date"></ng-datepicker>
+        <ng-datepicker #datePicker
+          [(ngModel)]="date"
+          [isOpened]="isOpen"
+          [options]="options"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          (openChanged)="openChanged($event)"
+          [isUpdateOnClick]="false"
+          [toggleElement]="toggleElement"></ng-datepicker>
+      </div>
+      <div class="button-container">
+        <button class="toggle" #toggleButton (click)="toggle()">Toggle</button>
+        <button class="toggle" (click)="datePicker.update()">Update</button>
       </div>
     </div>
   </div>

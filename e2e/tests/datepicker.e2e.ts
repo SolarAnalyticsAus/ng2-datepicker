@@ -8,13 +8,6 @@ describe('NgDatepicker', () => {
       .then(el => expect(el.isPresent()).toBeFalsy());
   });
 
-  it('should open calendar on input click', () => {
-    return Promise.resolve()
-      .then((): any => element(by.css('.ngx-datepicker-input')).click())
-      .then(() => element(by.css('.main-calendar-container')))
-      .then(el => expect(el.isPresent()).toBeTruthy());
-  });
-
   it('should close calendar on click outside of calendar', () => {
     return Promise.resolve()
       .then((): any => element(by.css('.container')).click())

@@ -8,20 +8,14 @@ $text-secondary: #A4A9B1
 $color: #1A91EB
 
 .ngx-datepicker-container
+  z-index: 10000
   position: relative
-
-  .ngx-datepicker-input
-    padding: 5px 10px
-    font-size: 14px
-    width: 200px
-    outline: none
-    border: 1px solid $border
 
   .ngx-datepicker-calendar-container
     position: absolute
     width: 300px
     background: $background
-    top: 40px
+    top: 0
     left: 0
     box-shadow: $shadow
     border: 1px solid $border
@@ -67,14 +61,14 @@ $color: #1A91EB
           text-transform: uppercase
           text-align: center
 
-      .main-calendar-days, .main-calendar-years
+      .main-calendar-days, .main-calendar-months, .main-calendar-years
         padding: 15px 0
         width: 100%
         display: inline-block
         max-height: 275px
         overflow: hidden
 
-        .day-unit, .year-unit
+        .day-unit, .month-unit, .year-unit
           width: calc(100% / 7)
           height: 40px
           display: inline-flex
@@ -97,11 +91,27 @@ $color: #1A91EB
             background: $color
             color: $white
 
+          &.is-disabled
+            cursor: default
+            color: $text-secondary
+
+            &:hover, &.is-selected
+              background: $white
+
+      .main-calendar-months
+        height: 180px
+        display: block
+        padding: 0
+
+        .month-unit
+          width: calc(100% / 3)
+          border-radius: 40px
+
       .main-calendar-years
         height: 210px
         display: block
         padding: 0
 
         .year-unit
-          width: calc(100% / 3)
-          border-radius: 10px
+          width: calc(100% / 4)
+          border-radius: 40px
