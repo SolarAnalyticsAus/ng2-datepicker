@@ -22,7 +22,9 @@ import {
   getDay,
   subDays,
   subYears,
-  setDay
+  setDay,
+  startOfDay,
+  addDays,
 } from 'date-fns';
 
 export interface DatepickerOptions {
@@ -70,12 +72,14 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
   months: {
     month: number;
     name: string;
-    isThisMonth: boolean;
+    isToday: boolean;
+    isSelected: boolean;
     isValid: boolean;
   }[];
   years: {
     year: number;
-    isThisYear: boolean;
+    isToday: boolean;
+    isSelected: boolean;
     isValid: boolean;
   }[];
   dayNames: string[];
@@ -118,10 +122,10 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
     this.initYears(getYear(this.date));
     // Remove timestamps from minDate and maxDate
     if (this.minDate != null) {
-      this.minDate = this.getDateOnly(this.minDate);
+      this.minDate = startOfDay(this.minDate);
     }
     if (this.maxDate != null) {
-      this.maxDate = this.getDateOnly(this.maxDate);
+      this.maxDate = startOfDay(this.maxDate);
     }
   }
 
@@ -229,11 +233,6 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
     this.setBarTitle();
   }
 
-  getDateOnly(date: Date): Date {
-    date.setHours(0, 0, 0, 0);
-    return date;
-  }
-
   init(): void {
     const start = startOfMonth(this.date);
     const end = endOfMonth(this.date);
@@ -251,6 +250,7 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
       };
     });
 
+    // Add days before current month to start of this month's calendar
     for (let i = 1; i <= getDay(start) - this.firstCalendarDay; i++) {
       const date = subDays(start, i);
       this.days.unshift({
@@ -264,6 +264,22 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
         isValid: this.isValidDate(date),
       });
     }
+
+    // Add days after current month to end of this month's calendar
+    for (let i = 1; i < 7 - getDay(end) - this.firstCalendarDay; i++) {
+      const date = addDays(end, i);
+      this.days.push({
+        date: date,
+        day: getDate(date),
+        month: getMonth(date),
+        year: getYear(date),
+        inThisMonth: false,
+        isToday: isToday(date),
+        isSelected: this.isSelectedDate(date),
+        isValid: this.isValidDate(date),
+      });
+    }
+
     this.setBarTitle();
   }
 
@@ -274,7 +290,8 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
     this.years = Array.from(new Array(this.yearRange), (x, i) => i + this.minYear).map(year => {
       return {
         year: year,
-        isThisYear: year === getYear(this.date),
+        isToday: year === getYear(startOfDay(new Date())),
+        isSelected: year === getYear(this.date),
         isValid: this.isValidYear(year),
       };
     });
@@ -286,7 +303,8 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
       this.months.push({
         month: i,
         name: this.monthNames[i],
-        isThisMonth: i === getMonth(this.date),
+        isToday: i === getMonth(startOfDay(new Date())),
+        isSelected: i === getMonth(this.date),
         isValid: this.isValidMonth(i),
       });
     }
@@ -388,7 +406,7 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
 
   isValidMonth(month: number) {
     // Check if month is within min and max dates
-    const date = this.getDateOnly(setMonth(this.date, month));
+    const date = startOfDay(setMonth(this.date, month));
     const isValidMin = this.minDate == null ||
       isAfter(date, this.minDate) || isSameMonth(date, this.minDate);
     const isValidMax = this.maxDate == null ||
@@ -398,7 +416,7 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
 
   isValidYear(year: number) {
     // Check if year is within min and max dates
-    let date = this.getDateOnly(setYear(this.date, year));
+    let date = startOfDay(setYear(this.date, year));
     const isValidMin = this.minDate == null ||
       isAfter(date, this.minDate) || isSameYear(date, this.minDate);
     const isValidMax = this.maxDate == null ||
