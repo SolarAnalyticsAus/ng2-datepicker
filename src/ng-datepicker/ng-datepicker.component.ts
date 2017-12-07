@@ -45,8 +45,18 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
   @Input() minDate: Date;
   @Input() maxDate: Date;
 
-  // Use to toggle date picker from parent
-  @Input() isOpened: boolean;
+  // Make any updates before showing datepicker
+  _isOpened: boolean;
+  @Input()
+  set isOpened(value: boolean) {
+      this._isOpened = value;
+      if (this._isOpened) {
+          this.init();
+      }
+  }
+  get isOpened(): boolean {
+      return this._isOpened;
+  }
 
   // Set toggle element from parent, need to set it so date picker can handle close events
   @Input() toggleElement: ElementRef;
@@ -212,6 +222,7 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit {
 
   update() {
     this.date = this.selectedDate;
+    console.log('this.date=', this.date);
     this.value = this.date;
     this.init();
     this.close();
